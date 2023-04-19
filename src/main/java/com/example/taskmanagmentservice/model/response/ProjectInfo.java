@@ -12,7 +12,7 @@ import java.time.Instant;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectInfo {
+public class ProjectInfo implements Comparable<ProjectInfo> {
 
     public ProjectInfo(Project project) {
         this.id = project.getId();
@@ -29,4 +29,16 @@ public class ProjectInfo {
 
     private Instant createdAt;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProjectInfo that = (ProjectInfo) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int compareTo(ProjectInfo o) {
+        return this.id.compareTo(o.id);
+    }
 }

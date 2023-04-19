@@ -2,6 +2,7 @@ package com.example.taskmanagmentservice.rest.User;
 
 
 import com.example.taskmanagmentservice.database.enums.Role;
+import com.example.taskmanagmentservice.database.structure.Project.ProjectRepository;
 import com.example.taskmanagmentservice.database.structure.User.User;
 import com.example.taskmanagmentservice.database.structure.User.UserRepository;
 import com.example.taskmanagmentservice.model.request.UserData;
@@ -27,6 +28,9 @@ public class UserResponseBuilder {
 
     @Autowired
     AuthenticationManager authenticationManager;
+
+    @Autowired
+    ProjectRepository projectRepository;
 
     public ResponseEntity<AuthResponse> processRegistrationUser(UserData userData){
         User user = User.builder()
@@ -58,6 +62,13 @@ public class UserResponseBuilder {
 
     public ResponseEntity<UserInfo> processGetUserInfo(Long id){
         return new ResponseEntity<>(new UserInfo(),HttpStatus.OK );
+    }
+
+    public ResponseEntity<UserInfo> processSetProjectToUser(Long userId, Long projectId){
+        User u = userRepository.findById(userId).get();
+        u.setProject(projectRepository.findById(projectId).get());
+        u = userRepository.save(u);
+        return new ResponseEntity<>(new UserInfo(u), HttpStatus.OK);
     }
 
 }

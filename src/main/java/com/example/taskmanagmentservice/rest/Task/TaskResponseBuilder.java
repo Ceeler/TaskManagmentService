@@ -2,6 +2,8 @@ package com.example.taskmanagmentservice.rest.Task;
 
 
 import com.example.taskmanagmentservice.database.enums.Status;
+import com.example.taskmanagmentservice.database.structure.Project.Project;
+import com.example.taskmanagmentservice.database.structure.Project.ProjectRepository;
 import com.example.taskmanagmentservice.database.structure.Task.Task;
 import com.example.taskmanagmentservice.database.structure.Task.TaskRepository;
 import com.example.taskmanagmentservice.database.structure.User.User;
@@ -28,16 +30,24 @@ public class TaskResponseBuilder {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    ProjectRepository projectRepository;
+
     //TODO Понять как поставить пользователя без БД
     public ResponseEntity<TaskInfo> processAddNewTask(TaskData taskData){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Project p = null;
+        if(taskData.getProjectId() != null){
+            p = projectRepository.findById(taskData.getProjectId()).get();
+        }
         Task task = Task.builder()
                 .title(taskData.getTitle())
                 .description(taskData.getDescription())
                 .status(Status.NEW)
                 .userId(userRepository.findById(user.getId()).get())
-                .projectId(null)
+                .projectId(p)
                 .build();
+
         task = taskRepository.save(task);
         TaskInfo taskInfo = TaskInfo.builder()
                 .id(task.getId())
@@ -105,6 +115,18 @@ public class TaskResponseBuilder {
         );
 
         return new ResponseEntity<>(request, HttpStatus.OK);
+
+    }
+
+    public ResponseEntity<TaskInfo> processSetProjectToTask(Long taskId, Long projectId){
+
+        Project p = projectRepository.findById(projectId).get();
+        Task t = taskRepository.findById(taskId).get();
+
+        t.setProjectId(p);
+        t = taskRepository.save(t);
+
+        return new ResponseEntity<>(new TaskInfo(t), HttpStatus.OK);
 
     }
 

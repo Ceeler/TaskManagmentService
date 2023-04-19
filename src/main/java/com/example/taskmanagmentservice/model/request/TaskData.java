@@ -19,6 +19,6 @@ public class TaskData {
 
     private String description;
 
-    private Optional<Long> project_id;
+    private Long projectId;
 
 }

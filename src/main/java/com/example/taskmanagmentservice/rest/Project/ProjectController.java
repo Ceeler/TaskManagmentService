@@ -1,12 +1,14 @@
 package com.example.taskmanagmentservice.rest.Project;
 
 import com.example.taskmanagmentservice.model.request.ProjectData;
+import com.example.taskmanagmentservice.model.response.ProjectAdditionalInfo;
 import com.example.taskmanagmentservice.model.response.ProjectInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/project")
@@ -30,8 +32,9 @@ public class ProjectController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ProjectInfo>> getAllProjects(){
-        return null;
+    public ResponseEntity<Map<ProjectInfo, ProjectAdditionalInfo>> getProjectsFullInfo(){
+
+        return projectResponseBuilder.processGetProjectFullInfo();
     }
 
 }

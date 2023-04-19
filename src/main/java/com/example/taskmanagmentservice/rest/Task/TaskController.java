@@ -1,20 +1,15 @@
 package com.example.taskmanagmentservice.rest.Task;
 
 
-import com.example.taskmanagmentservice.database.enums.Status;
-import com.example.taskmanagmentservice.database.structure.User.User;
+import com.example.taskmanagmentservice.model.request.ProjectIdRequest;
 import com.example.taskmanagmentservice.model.request.TaskData;
-import com.example.taskmanagmentservice.model.request.newStatus;
+import com.example.taskmanagmentservice.model.request.NewStatusRequest;
 import com.example.taskmanagmentservice.model.response.TaskInfo;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -41,7 +36,7 @@ public class TaskController {
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TaskInfo> updateTaskStatusById(
             @PathVariable Long id,
-            @RequestBody newStatus status
+            @RequestBody NewStatusRequest status
     ){
         return taskResponseBuilder.processUpdateTaskStatusById(id, status.getStatus());
     }
@@ -54,9 +49,9 @@ public class TaskController {
     @PutMapping(path = "/{id}/setProject")
     public ResponseEntity<TaskInfo> setProjectToTask(
             @PathVariable Long taskId,
-            @RequestBody Long projectId
+            @RequestBody ProjectIdRequest projectId
     ){
-        return null;
+        return taskResponseBuilder.processSetProjectToTask(taskId, projectId.getProjectId());
     }
 
 }
